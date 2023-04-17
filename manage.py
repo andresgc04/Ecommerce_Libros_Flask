@@ -1,6 +1,9 @@
 from app import inicializar_app
+from config import config
 
-app = inicializar_app()
+configuration = config['development']
+
+app = inicializar_app(configuration)
 
 manager = app
 
