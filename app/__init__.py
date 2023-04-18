@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Hola Mundo!, Código Facilito.'
+    return render_template('index.html')
 
 def page_not_found(error):
     return render_template('errors/404.html'), 404
