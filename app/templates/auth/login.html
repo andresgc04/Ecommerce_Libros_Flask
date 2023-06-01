@@ -8,6 +8,7 @@
 
 {% block body %}
 <form class="form-signin w-100 m-auto" action="/login" method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <img
     class="mb-4"
     src="{{ url_for('static', filename='image/flask.svg') }}"
