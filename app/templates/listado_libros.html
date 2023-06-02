@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        {% for l in books_data.libros %}
+        <tr>
+            <td>{{ l['ISBN'] }}</td>
+            <td>{{ l['TITLE'] }}</td>
+            <td>{{ l['YEAR_EDITION'] }}</td>
+            <td>{{ l['PRICE'] }}</td>
+            <td>{{ l['LAST_NAMES'] }}</td>
+            <td>{{ l['NAMES'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
