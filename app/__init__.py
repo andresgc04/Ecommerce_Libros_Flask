@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager, login_user
 import pymysql
 
 from .models.ModelBook import ModelBook
@@ -21,6 +22,11 @@ def connection():
 
     return pymysql.connect(host=server, user=user, password=password, database=db, charset=charset)
 
+login_manager_app = LoginManager(app)
+
+@login_manager_app.user_loader
+def load_user(user_id):
+    return ModelUser.get_user_by_id(connection(), pymysql, user_id)
 
 @app.route('/')
 def index():
@@ -29,7 +35,6 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # CSRF (Cross-Site Request Forgery): Solicitud de falsificación entre sitios.
-
     if request.method == 'POST':
         
         user = Users(None, request.form['userName'], request.form['password'], None)
@@ -37,6 +42,9 @@ def login():
         user_loged = ModelUser.login(connection(), user, pymysql)
 
         if user_loged != None:
+
+            login_user(user_loged)
+
             return redirect(url_for('index'))
         else:
             return render_template('auth/login.html')
