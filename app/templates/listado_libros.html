@@ -8,14 +8,14 @@
 </head>
 <body>
     <table>
-        {% for l in books_data.libros %}
+        {% for l in books_data.books %}
         <tr>
-            <td>{{ l['ISBN'] }}</td>
-            <td>{{ l['TITLE'] }}</td>
-            <td>{{ l['YEAR_EDITION'] }}</td>
-            <td>{{ l['PRICE'] }}</td>
-            <td>{{ l['LAST_NAMES'] }}</td>
-            <td>{{ l['NAMES'] }}</td>
+            <td>{{ l.isbn }}</td>
+            <td>{{ l.title }}</td>
+            <td>{{ l.year_edition }}</td>
+            <td>{{ l.author.last_names }}</td>
+            <td>{{ l.author.names }}</td>
+            <td>{{ l.price }}</td>
         </tr>
         {% endfor %}
     </table>

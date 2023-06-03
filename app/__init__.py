@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
 import pymysql
 
+from .models.ModelBook import ModelBook
+
 app = Flask(__name__)
 
 csrf = CSRFProtect()
@@ -38,27 +40,16 @@ def login():
 
 
 @app.route('/libros')
-def listar_libros():
-
+def list_books():
     try:
-        connection_db = connection()
-        with connection_db.cursor(pymysql.cursors.DictCursor) as cursor:
-            cursor.execute(
-                '''  SELECT books.ISBN, books.TITLE, books.YEAR_EDITION, books.PRICE,
-                            authors.LAST_NAMES, authors.NAMES
-                       FROM BOOKS books INNER JOIN AUTHORS authors 
-                         ON books.authorID = authors.authorID
-                   ORDER BY books.TITLE ASC''')
-            books_data = cursor.fetchall()
-            books_data = {
-                "libros": books_data
-            }
+        books = ModelBook.list_books(connection(), pymysql)
 
-        # return 'Ok. Números de libros: {0}'.format(len(books_data))
-        return render_template('listado_libros.html', books_data=books_data)
+        books_data = {'books' : books}
 
+        return render_template('listado_libros.html', books_data = books_data)
+    
     except Exception as ex:
-        raise Exception(ex)
+        print(ex)
 
 
 def page_not_found(error):
