@@ -7,6 +7,7 @@ class ModelBook():
     def list_books(self, connection, pymysql):
         try:
             connection_db = connection
+            
             with connection_db.cursor(pymysql.cursors.DictCursor) as cursor:
                 cursor.execute('''SELECT books.ISBN, books.TITLE, books.YEAR_EDITION, books.PRICE,
                                          authors.LAST_NAMES, authors.NAMES
