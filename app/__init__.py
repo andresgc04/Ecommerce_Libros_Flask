@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, logout_user
 import pymysql
 
 from .models.ModelBook import ModelBook
@@ -51,6 +51,11 @@ def login():
     else:
         return render_template('auth/login.html')
 
+@app.route('/logout')
+def logout():
+    logout_user()
+
+    return redirect(url_for('login'))
 
 @app.route('/libros')
 def list_books():
