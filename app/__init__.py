@@ -9,8 +9,6 @@ app = Flask(__name__)
 csrf = CSRFProtect()
 
 # MySQL Connection:
-
-
 def connection():
     server = 'localhost'
     user = 'root'
@@ -24,7 +22,6 @@ def connection():
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
