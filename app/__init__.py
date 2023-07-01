@@ -8,6 +8,8 @@ from .models.ModelUser import ModelUser
 
 from .models.entities.Users import Users
 
+from .consts import *
+
 app = Flask(__name__)
 
 csrf = CSRFProtect()
@@ -45,9 +47,11 @@ def login():
 
             login_user(user_loged)
 
+            flash(WELCOME_MESSAGE, 'success')
+
             return redirect(url_for('index'))
         else:
-            flash('Credenciales Inválidas....')
+            flash(LOGIN_INVALID_CREDENTIALS, 'warning')
             return render_template('auth/login.html')
     else:
         return render_template('auth/login.html')
@@ -56,7 +60,7 @@ def login():
 def logout():
     logout_user()
 
-    flash('Cerraste sesión exitosamente.')
+    flash(LOGOUT, 'success')
 
     return redirect(url_for('login'))
 
