@@ -9,9 +9,7 @@ class Users(UserMixin):
         self.password = password
         self.user_type_id = user_type
 
-    def encrypt_password(password):
-        encrypted = generate_password_hash(password)
-        
-        password_match = check_password_hash(encrypted, password)
-        
-        return password_match
+    @classmethod
+    def verify_password(self, password_encrypted, password):
+
+        return check_password_hash(password_encrypted, password)

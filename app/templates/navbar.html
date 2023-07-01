@@ -15,16 +15,21 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{{ url_for('index') }}"
             >Inicio</a
           >
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
+
+        {% if current_user.user_type_id.user_type_id == 2 %}
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{{ url_for('list_books') }}"
+            >Libros</a
+          >
         </li>
-        -->
+        {% endif %}
+
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{{ url_for('logout') }}"
             >Cerrar sesión</a
@@ -33,4 +38,7 @@
       </ul>
     </div>
   </div>
+  <span class="navbar-text">
+    <strong>{{ current_user.user_name }}</strong> ({{ current_user.user_type_id.user_type_name }})
+  </span>
 </nav>

@@ -1,5 +1,3 @@
-from werkzeug.security import check_password_hash
-
 from .entities.Users import Users
 from .entities.UsersTypes import UsersTypes
 
@@ -18,14 +16,17 @@ class ModelUser():
 
                 user_data = cursor.fetchone()
 
-                password_match = check_password_hash(
-                    user_data['PASSWORD'], user.password)
+                if user_data != None:
+                    password_match = Users.verify_password(
+                        user_data['PASSWORD'], user.password)
 
-                if password_match:
-                    user_loged = Users(
-                        user_data['USERID'], user_data['USER_NAME'], None, None)
+                    if password_match:
+                        user_loged = Users(
+                            user_data['USERID'], user_data['USER_NAME'], None, None)
 
-                    return user_loged
+                        return user_loged
+                    else:
+                        return None
                 else:
                     return None
 
@@ -47,9 +48,11 @@ class ModelUser():
 
                 user_data = cursor.fetchone()
 
-                user_type = UsersTypes(user_data['USER_TYPEID'], user_data['USER_TYPE_NAME'])
+                user_type = UsersTypes(
+                    user_data['USER_TYPEID'], user_data['USER_TYPE_NAME'])
 
-                user_loged = Users(user_data['USERID'], user_data['USER_NAME'], None, user_type)
+                user_loged = Users(
+                    user_data['USERID'], user_data['USER_NAME'], None, user_type)
 
                 return user_loged
 
