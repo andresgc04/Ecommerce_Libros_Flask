@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager, login_user, logout_user
+from flask_login import LoginManager, login_user, logout_user, login_required
 import pymysql
 
 from .models.ModelBook import ModelBook
@@ -31,6 +31,7 @@ def load_user(user_id):
     return ModelUser.get_user_by_id(connection(), pymysql, user_id)
 
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
 
@@ -65,6 +66,7 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/libros')
+@login_required
 def list_books():
     try:
         books = ModelBook.list_books(connection(), pymysql)
@@ -76,6 +78,8 @@ def list_books():
     except Exception as ex:
         print(ex)
 
+def unauthorized_site(error):
+    return redirect(url_for('login'))
 
 def page_not_found(error):
     return render_template('errors/404.html'), 404
@@ -84,5 +88,6 @@ def page_not_found(error):
 def inicializar_app(config):
     app.config.from_object(config)
     csrf.init_app(app)
+    app.register_error_handler(401, unauthorized_site)
     app.register_error_handler(404, page_not_found)
     return app
