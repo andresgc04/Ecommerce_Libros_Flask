@@ -1,11 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 import pymysql
 
+from .models.ModelBuyBook import ModelBuyBook
 from .models.ModelBook import ModelBook
 from .models.ModelUser import ModelUser
 
+from .models.entities.Purchasing import Purchasing
+from .models.entities.Books import Books
 from .models.entities.Users import Users
 
 from .consts import *
@@ -99,14 +102,33 @@ def list_books():
         books = ModelBook.list_books(connection(), pymysql)
 
         books_data = {
-            'title':'Listado De Libros',
+            'title': 'Listado De Libros',
             'books': books
-            }
+        }
 
         return render_template('listado_libros.html', books_data=books_data)
 
     except Exception as ex:
         return render_template('errors/error.html', message=format(ex))
+
+
+@app.route('/buyBook', methods=['POST'])
+@login_required
+def buy_book():
+    data_request = request.get_json()
+
+    data = {}
+
+    try:
+        book = Books(data_request['isbn'], None, None, None, None)
+
+        book_purchase = Purchasing(None, book, current_user)
+
+        data['success'] = ModelBuyBook.register_book_purchase(connection(), book_purchase, pymysql)
+    except Exception as ex:
+        data['message'] = format(ex)
+        data['success'] = False
+    return jsonify(data)
 
 
 def unauthorized_site(error):
