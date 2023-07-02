@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 import pymysql
 
 from .models.ModelBook import ModelBook
@@ -15,6 +15,8 @@ app = Flask(__name__)
 csrf = CSRFProtect()
 
 # MySQL Connection:
+
+
 def connection():
     server = 'localhost'
     user = 'root'
@@ -24,23 +26,22 @@ def connection():
 
     return pymysql.connect(host=server, user=user, password=password, database=db, charset=charset)
 
+
 login_manager_app = LoginManager(app)
+
 
 @login_manager_app.user_loader
 def load_user(user_id):
     return ModelUser.get_user_by_id(connection(), pymysql, user_id)
 
-@app.route('/')
-@login_required
-def index():
-    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # CSRF (Cross-Site Request Forgery): Solicitud de falsificación entre sitios.
     if request.method == 'POST':
-        
-        user = Users(None, request.form['userName'], request.form['password'], None)
+
+        user = Users(None, request.form['userName'],
+                     request.form['password'], None)
 
         user_loged = ModelUser.login(connection(), user, pymysql)
 
@@ -57,6 +58,7 @@ def login():
     else:
         return render_template('auth/login.html')
 
+
 @app.route('/logout')
 def logout():
     logout_user()
@@ -65,21 +67,51 @@ def logout():
 
     return redirect(url_for('login'))
 
+
+@app.route('/')
+@login_required
+def index():
+    if current_user.is_authenticated:
+        if current_user.user_type_id.user_type_id == 1:
+            books_sold = []
+
+            data = {
+                'title': 'Libros Vendidos',
+                'books_sold': books_sold
+            }
+        else:
+            books_purchased = []
+
+            data = {
+                'title': 'Mis Compras',
+                'books_purchased': books_purchased
+            }
+
+        return render_template('index.html', data=data)
+    else:
+        return redirect(url_for('login'))
+
+
 @app.route('/libros')
 @login_required
 def list_books():
     try:
         books = ModelBook.list_books(connection(), pymysql)
 
-        books_data = {'books' : books}
+        books_data = {
+            'title':'Listado De Libros',
+            'books': books
+            }
 
-        return render_template('listado_libros.html', books_data = books_data)
-    
+        return render_template('listado_libros.html', books_data=books_data)
+
     except Exception as ex:
         print(ex)
 
+
 def unauthorized_site(error):
     return redirect(url_for('login'))
+
 
 def page_not_found(error):
     return render_template('errors/404.html'), 404

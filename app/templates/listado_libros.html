@@ -1,23 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <table>
-        {% for l in books_data.books %}
-        <tr>
-            <td>{{ l.isbn }}</td>
-            <td>{{ l.title }}</td>
-            <td>{{ l.year_edition }}</td>
-            <td>{{ l.author.last_names }}</td>
-            <td>{{ l.author.names }}</td>
-            <td>{{ l.price }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+{% extends './body.html' %}
+
+{% block title %}Listado De Libros{% endblock %}
+
+{% block container %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <h1>{{ books_data.title }}</h1>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    {% for list_books in books_data.books %}
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+        <div class="card mb-4 shadow-sm">
+            {% set url_cover = 'image/portadas/' + list_books.isbn + '.jpg' %}
+            <img class="card-img-top" src="{{ url_for('static', filename=url_cover) }}" height="320" alt="{{ list_books.title }}" />
+            <div class="card-body">
+                <h5 class="card-title">{{ list_books.title }}</h5>
+                <p class="card-text">{{ list_books.author.full_name()}}</p>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary">Comprar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

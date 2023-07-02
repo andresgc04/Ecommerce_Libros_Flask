@@ -1,5 +1,5 @@
 {% extends './body.html' %} 
-{% block title %} Index {% endblock %} 
+{% block title %}Index{% endblock %} 
 {% block container %}
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -25,5 +25,34 @@
     {% endif %} 
     {% endwith %}
   </div>
+</div>
+
+<hr />
+
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <h2>{{ data.title }}</h2>
+  </div>
+
+  {% if current_user.user_type_id.user_type_id == 1 %}
+
+  {% if data.books_sold|length > 0 %}
+
+  {% else %}
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <h2>A&uacute;n no existen libros vendidos...</h2>
+  </div>
+  {% endif %}
+
+  {% else  %}
+  {% if data.books_purchased|length > 0 %}
+
+  {% else %}
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <h2>A&uacute;n no has comprado libros...</h2>
+  </div>
+  {% endif %}
+
+  {% endif %}
 </div>
 {% endblock %}
