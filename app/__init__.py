@@ -106,7 +106,7 @@ def list_books():
         return render_template('listado_libros.html', books_data=books_data)
 
     except Exception as ex:
-        print(ex)
+        return render_template('errors/error.html', message=format(ex))
 
 
 def unauthorized_site(error):
