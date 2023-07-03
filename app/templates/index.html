@@ -2,6 +2,10 @@
 
 {% block title %}Index{% endblock %}
 
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
 {% block container %}
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -42,7 +46,38 @@
   {% if current_user.user_type_id.user_type_id == 1 %} 
   
   {% if data.books_sold|length > 0 %}
-
+  <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Libro</th>
+            <th>Unidades Vendidas</th>
+            <th>Precio Unit.</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set count_books_sold = namespace(total=0) %}
+          {% for list_books_sold in data.books_sold %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ list_books_sold.title }}</td>
+            <td>{{ list_books_sold.units_sold }}</td>
+            <td>RD$ {{ list_books_sold.price }}</td>
+            <td>RD$ {{ (list_books_sold.price * list_books_sold.units_sold) }}</td>
+          </tr>
+          {% set count_books_sold.total = count_books_sold.total + (list_books_sold.price * list_books_sold.units_sold) %}
+          {% endfor %}
+          <tr>
+            <td colspan="4"></td>
+            <td>RD$ {{ count_books_sold.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   {% else %}
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <h2>A&uacute;n no existen libros vendidos...</h2>

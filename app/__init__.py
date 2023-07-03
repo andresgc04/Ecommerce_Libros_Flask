@@ -76,21 +76,35 @@ def logout():
 def index():
     if current_user.is_authenticated:
         if current_user.user_type_id.user_type_id == 1:
-            books_sold = []
+            try:
 
-            data = {
-                'title': 'Libros Vendidos',
-                'books_sold': books_sold
-            }
+                books_sold = ModelBook.list_sold_books(connection(), pymysql)
+
+                data = {
+                    'title': 'Libros Vendidos',
+                    'books_sold': books_sold
+                }
+
+                return render_template('index.html', data=data)
+
+            except Exception as ex:
+                return render_template('errors/error.html', message=format(ex))
+
         else:
-            books_purchased = ModelBuyBook.list_user_purchases(connection(), pymysql, current_user)
+            try:
 
-            data = {
-                'title': 'Mis Compras',
-                'books_purchased': books_purchased
-            }
+                books_purchased = ModelBuyBook.list_user_purchases(
+                    connection(), pymysql, current_user)
 
-        return render_template('index.html', data=data)
+                data = {
+                    'title': 'Mis Compras',
+                    'books_purchased': books_purchased
+                }
+
+                return render_template('index.html', data=data)
+
+            except Exception as ex:
+                return render_template('errors/error.html', message=format(ex))
     else:
         return redirect(url_for('login'))
 
@@ -124,7 +138,8 @@ def buy_book():
 
         book_purchase = Purchasing(None, book, current_user)
 
-        data['success'] = ModelBuyBook.register_book_purchase(connection(), book_purchase, pymysql)
+        data['success'] = ModelBuyBook.register_book_purchase(
+            connection(), book_purchase, pymysql)
     except Exception as ex:
         data['message'] = format(ex)
         data['success'] = False
