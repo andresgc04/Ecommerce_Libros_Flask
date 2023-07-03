@@ -83,7 +83,7 @@ def index():
                 'books_sold': books_sold
             }
         else:
-            books_purchased = []
+            books_purchased = ModelBuyBook.list_user_purchases(connection(), pymysql, current_user)
 
             data = {
                 'title': 'Mis Compras',

@@ -34,7 +34,11 @@
             return response.json();
           })
           .then((data) => {
-            notificationSwal("¡Éxito!", 'Libro Comprado', "success", "¡Ok!");
+            if(data.success){
+              notificationSwal("¡Éxito!", 'Libro Comprado', "success", "¡Ok!");
+            }else{
+              notificationSwal("¡Alerta!", data.message, "warning", "Ok");
+            }
           })
           .catch((error) => {
             notificationSwal("Error", error, "error", "Cerrar");

@@ -1,11 +1,14 @@
-{% extends './body.html' %} 
-{% block title %}Index{% endblock %} 
+{% extends './body.html' %}
+
+{% block title %}Index{% endblock %}
+
 {% block container %}
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <h1>Librería "Ecommerce Libros Flask" !</h1>
 
     {% with messages = get_flashed_messages() %} 
+    
     {% if messages %}
     <br />
     {% for message in messages %}
@@ -21,8 +24,10 @@
         aria-label="Close"
       ></button>
     </div>
-    {% endfor %} 
-    {% endif %} 
+    {% endfor %}
+    
+    {% endif %}
+    
     {% endwith %}
   </div>
 </div>
@@ -34,25 +39,42 @@
     <h2>{{ data.title }}</h2>
   </div>
 
-  {% if current_user.user_type_id.user_type_id == 1 %}
-
+  {% if current_user.user_type_id.user_type_id == 1 %} 
+  
   {% if data.books_sold|length > 0 %}
 
   {% else %}
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <h2>A&uacute;n no existen libros vendidos...</h2>
   </div>
-  {% endif %}
-
-  {% else  %}
+  {% endif %} 
+  {% else %}
   {% if data.books_purchased|length > 0 %}
-
+  {% for list_books_purchased in data.books_purchased %}
+  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+    <div class="card mb-4 shadow-sm">
+      {% set url_cover = 'image/portadas/' + list_books_purchased.book.isbn + '.jpg' %}
+      <img
+        class="card-img-top"
+        src="{{ url_for('static', filename=url_cover) }}"
+        height="320"
+        alt="{{ list_books_purchased.book.title }}"
+      />
+      <div class="card-body">
+        <h5 class="card-title">
+          {{ list_books_purchased.book.title }}
+          <span style="float: right">RD$ {{ list_books_purchased.book.price }}</span>
+        </h5>
+        <p class="card-text">Comprado: {{ list_books_purchased.formatted_date() }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %} 
   {% else %}
   <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
     <h2>A&uacute;n no has comprado libros...</h2>
   </div>
-  {% endif %}
-
+  {% endif %} 
   {% endif %}
 </div>
 {% endblock %}

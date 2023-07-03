@@ -23,7 +23,7 @@
         alt="{{ list_books.title }}"
       />
       <div class="card-body">
-        <h5 class="card-title">{{ list_books.title }}</h5>
+        <h5 class="card-title">{{ list_books.title }} <span style="float: right;">RD$ {{ list_books.price }}</span></h5>
         <p class="card-text">{{ list_books.author.full_name()}}</p>
         <div class="d-grid gap-2">
           <button
