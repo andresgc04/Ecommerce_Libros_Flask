@@ -32,6 +32,27 @@ class ModelBook():
             raise Exception(ex)
 
     @classmethod
+    def read_book(self, connection, pymysql, isbn):
+        try:
+            connection_db = connection
+
+            with connection_db.cursor(pymysql.cursors.DictCursor) as cursor:
+                cursor.execute("""
+                                  SELECT ISBN, TITLE, 
+                                         YEAR_EDITION, PRICE
+                                    FROM BOOKS 
+                                   WHERE isbn = '{0}'""".format(isbn))
+
+                read_book_data = cursor.fetchone()
+
+                book = Books(read_book_data['ISBN'], read_book_data['TITLE'],
+                             None, read_book_data['YEAR_EDITION'], read_book_data['PRICE'])
+
+                return book
+        except Exception as ex:
+            raise Exception(ex)
+
+    @classmethod
     def list_sold_books(self, connection, pymysql):
         try:
             connection_db = connection
@@ -52,12 +73,13 @@ class ModelBook():
                 books_sold = []
 
                 for row_books_sold in books_sold_data:
-                    books = Books(row_books_sold['book_isbn'], row_books_sold['title'], None, None, row_books_sold['price'])
+                    books = Books(
+                        row_books_sold['book_isbn'], row_books_sold['title'], None, None, row_books_sold['price'])
                     books.units_sold = int(row_books_sold['units_sold'])
 
                     books_sold.append(books)
-                
+
                 return books_sold
-                
+
         except Exception as ex:
             raise Exception(ex)

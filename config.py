@@ -6,10 +6,11 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MAIL_SERVER = 'smtp-mail.outlook.com' 
+    MAIL_SERVER = 'smtp-mail.outlook.com'
     MAIL_PORT = 587 # TLS: Transport Layer Security (Seguridad De La Capa De Transporte).
     MAIL_USE_TLS = True
-    MAIL_USER_NAME = 'andresgc1997@outlook.com'
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = 'andresgc1997@outlook.com'
     MAIL_PASSWORD = config('MAIL_PASSWORD')
 
 

@@ -14,6 +14,7 @@ from .models.entities.Books import Books
 from .models.entities.Users import Users
 
 from .consts import *
+from .emails import book_purchase_confirmation
 
 app = Flask(__name__)
 
@@ -138,12 +139,16 @@ def buy_book():
     data = {}
 
     try:
-        book = Books(data_request['isbn'], None, None, None, None)
+        #book = Books(data_request['isbn'], None, None, None, None)
+
+        book = ModelBook.read_book(connection(), pymysql, data_request['isbn'])
 
         book_purchase = Purchasing(None, book, current_user)
 
         data['success'] = ModelBuyBook.register_book_purchase(
             connection(), book_purchase, pymysql)
+        
+        book_purchase_confirmation(mail, current_user, book)
     except Exception as ex:
         data['message'] = format(ex)
         data['success'] = False
@@ -163,7 +168,7 @@ def inicializar_app(config):
 
     csrf.init_app(app)
     mail.init_app(app)
-    
+
     app.register_error_handler(401, unauthorized_site)
     app.register_error_handler(404, page_not_found)
     return app
