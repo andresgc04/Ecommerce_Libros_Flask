@@ -42,5 +42,7 @@
 {% endblock %} 
 
 {% block customJS %}
+<script src="{{url_for('static', filename='lib/sweetalert2-11.7.1.2/package/dist/sweetalert2.all.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/notificationSwal.js')}}"></script>
 <script src="{{ url_for('static', filename='js/list_books.js') }}"></script>
 {% endblock %}
